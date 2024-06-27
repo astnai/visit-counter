@@ -5,14 +5,12 @@ export default function Home() {
   const [theme, setTheme] = useState("light");
 
   useEffect(() => {
-    // Fetch the visit count from the API
-    fetch("/api/visitCount")
-      .then((response) => response.json())
-      .then((data) => {
-        setVisitCount(data.visitCount);
-      });
+    const storedCount = localStorage.getItem("visitCount");
+    const parsedCount = storedCount ? parseInt(storedCount, 10) : 0;
+    const newCount = parsedCount + 1;
+    setVisitCount(newCount);
+    localStorage.setItem("visitCount", newCount);
 
-    // Theme change listener
     const darkModeMediaQuery = window.matchMedia(
       "(prefers-color-scheme: dark)"
     );
@@ -29,13 +27,9 @@ export default function Home() {
   };
 
   const incrementCounter = () => {
-    fetch("/api/visitCount", {
-      method: "POST",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setVisitCount(data.visitCount);
-      });
+    const newCount = visitCount + 1;
+    setVisitCount(newCount);
+    localStorage.setItem("visitCount", newCount);
   };
 
   return (
